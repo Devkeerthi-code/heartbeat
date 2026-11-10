@@ -12,13 +12,22 @@ Heartbeat watches those URLs for you. It only alerts on real outages (two failed
 
 ## Screenshots
 
-| Dashboard | Monitor detail | Public status page |
-| --- | --- | --- |
-| ![Dashboard](docs/dashboard-desktop.png) | ![Monitor detail](docs/monitor-desktop.png) | ![Status page](docs/status-desktop.png) |
+DEMO data from `npm run db:seed`.
 
-Mobile (360px): ![Dashboard on mobile](docs/dashboard-mobile.png) ![Status page on mobile](docs/status-mobile.png)
+| Dashboard | Monitor detail |
+| --- | --- |
+| ![Dashboard](docs/dashboard-desktop.png) | ![Monitor detail](docs/monitor-desktop.png) |
+| **Public status page** | **Add a monitor** |
+| ![Public status page](docs/status-page-desktop.png) | ![Add a monitor](docs/add-monitor-desktop.png) |
 
-TODO: if any image above is missing, capture it from `npm run dev` after `npm run db:seed` and save it under `docs/`.
+On a phone (360px):
+
+<p>
+  <img src="docs/dashboard-mobile.png" alt="Dashboard on mobile" width="200">
+  <img src="docs/monitor-mobile.png" alt="Monitor detail on mobile" width="200">
+  <img src="docs/status-page-mobile.png" alt="Status page on mobile" width="200">
+  <img src="docs/add-monitor-mobile.png" alt="Add monitor on mobile" width="200">
+</p>
 
 ## Features
 
