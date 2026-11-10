@@ -4,7 +4,8 @@ export type AlertKind = "DOWN" | "RECOVERED" | "SSL_EXPIRING";
 export type AlertChannel = "EMAIL" | "PUSH";
 
 export type AlertEvent =
-  | { kind: "DOWN" | "RECOVERED"; monitorId: string; incidentId: string }
+  | { kind: "DOWN"; monitorId: string; incidentId: string }
+  | { kind: "RECOVERED"; monitorId: string; incidentId: string }
   | { kind: "SSL_EXPIRING"; monitorId: string; sslExpiresAt: Date };
 
 export type ChannelPrefs = { emailAlerts: boolean; pushAlerts: boolean; hasPushSubscription: boolean };
