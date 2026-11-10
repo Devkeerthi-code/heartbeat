@@ -61,7 +61,7 @@ export function ResponseChart({ series, rangeLabel }: Props) {
         tabIndex={0}
         aria-label={`Response time over the last ${rangeLabel}. Use left and right arrow keys to read each point.`}
         viewBox={`0 0 ${width} ${CHART_H}`}
-        className="block h-[220px] w-full touch-pan-y"
+        className="ecg-paper block h-[220px] w-full touch-pan-y border border-line"
         onPointerMove={onPointer}
         onPointerDown={onPointer}
         onPointerLeave={(e) => e.pointerType === "mouse" && setSel(null)}
@@ -70,8 +70,8 @@ export function ResponseChart({ series, rangeLabel }: Props) {
       >
         <defs>
           <linearGradient id="hb-area" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stopColor="var(--accent-ink)" stopOpacity="0.22" />
-            <stop offset="1" stopColor="var(--accent-ink)" stopOpacity="0" />
+            <stop offset="0" stopColor="var(--trace)" stopOpacity="0.14" />
+            <stop offset="1" stopColor="var(--trace)" stopOpacity="0" />
           </linearGradient>
           <pattern id="hb-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
             <rect width="6" height="6" fill="var(--down)" opacity="0.08" />
@@ -90,7 +90,7 @@ export function ResponseChart({ series, rangeLabel }: Props) {
           <rect key={b.x} x={b.x} y={PAD.t} width={b.w} height={CHART_H - PAD.t - PAD.b} fill="url(#hb-hatch)" />
         ))}
         <path d={geo.area} fill="url(#hb-area)" />
-        <path d={geo.line} fill="none" stroke="var(--accent-ink)" strokeWidth="1.5" className="drop-shadow-[var(--glow)]" />
+        <path d={geo.line} fill="none" stroke="var(--trace)" strokeWidth="1.5" className="drop-shadow-[var(--glow)]" />
         {geo.p95Y !== null ? <line x1={PAD.l} x2={width - PAD.r} y1={geo.p95Y} y2={geo.p95Y} stroke="var(--text-3)" strokeDasharray="4 4" /> : null}
         {first ? (
           <text x={PAD.l} y={CHART_H - 4} fill="var(--text-3)" fontSize="10">
@@ -103,13 +103,13 @@ export function ResponseChart({ series, rangeLabel }: Props) {
         {point && sel !== null ? (
           <g>
             <line x1={geo.x(sel)} x2={geo.x(sel)} y1={PAD.t} y2={CHART_H - PAD.b} stroke="var(--text-2)" strokeDasharray="2 2" />
-            {point.ok && point.ms !== null ? <circle cx={geo.x(sel)} cy={geo.y(point.ms)} r="4" fill="var(--accent-ink)" stroke="var(--surface)" strokeWidth="2" /> : null}
+            {point.ok && point.ms !== null ? <circle cx={geo.x(sel)} cy={geo.y(point.ms)} r="4" fill="var(--trace)" stroke="var(--strip)" strokeWidth="2" /> : null}
           </g>
         ) : null}
       </svg>
       <div className="flex flex-wrap gap-4 pt-1 pb-2 text-xs text-fg-3">
         <span className="inline-flex items-center gap-1.5">
-          <i aria-hidden="true" className="w-3.5 border-t-2 border-accent-ink" /> response time
+          <i aria-hidden="true" className="w-3.5 border-t-2 border-[var(--trace)]" /> response time
         </span>
         <span className="inline-flex items-center gap-1.5">
           <i aria-hidden="true" className="w-3.5 border-t border-dashed border-fg-3" /> p95

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LandingTrace } from "@/components/landing/LandingTrace";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { Brand } from "@/components/ui/Brand";
 import { Prompt } from "@/components/ui/Prompt";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -18,6 +19,7 @@ export default async function LandingPage() {
       <header className="flex items-center justify-between gap-3 border-b border-line px-4 py-3 md:px-8 md:py-4">
         <Brand />
         <nav aria-label="Account" className="flex items-center gap-2">
+          <ThemeToggle className="mr-1" />
           {user ? (
             <Link href="/dashboard" className="btn btn-primary btn-sm">
               open dashboard

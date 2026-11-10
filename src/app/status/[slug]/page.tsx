@@ -8,6 +8,7 @@ import { StatusTag } from "@/components/monitor/StatusTag";
 import { beatFor, type UiStatus } from "@/components/monitor/status";
 import { UptimeBars } from "@/components/monitor/UptimeBars";
 import { PastIncidents } from "@/components/status-page/PastIncidents";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { BrandMark } from "@/components/ui/Brand";
 import { formatUtc } from "@/lib/format";
 import { formatUptime } from "@/lib/monitoring/uptime";
@@ -51,7 +52,7 @@ export default async function StatusPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-[860px] px-4 pt-5 pb-16 md:px-6 md:pt-8">
-      <header className="mb-6 flex items-center gap-3 md:mb-8">
+      <header className="perforated mb-6 flex items-center gap-3 md:mb-8">
         <span aria-hidden="true" className="grid size-9 flex-none place-items-center border border-accent-ink font-bold text-accent-ink">
           {initials}
         </span>
@@ -59,6 +60,7 @@ export default async function StatusPage({ params }: Props) {
           <strong className="block truncate text-md">{project.name}</strong>
           <small className="text-xs text-fg-3">status page · times in UTC</small>
         </div>
+        <ThemeToggle className="ml-auto self-start" />
       </header>
 
       <main id="main">
@@ -80,7 +82,7 @@ export default async function StatusPage({ params }: Props) {
             status --now
           </p>
           <h1 id="now-h" className="my-2 flex flex-wrap items-center gap-3 text-[26px]/[30px] tracking-[-0.04em] md:text-[36px]/[40px]">
-            <StatusTag status={down ? "down" : active ? "up" : "pending"} className="text-sm" />
+            <StatusTag status={down ? "down" : active ? "up" : "pending"} className="stamp text-sm" />
             {headline(down, active)}
           </h1>
           <div className="vitals crt mt-4">

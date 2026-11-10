@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { logoutAction } from "@/app/actions/auth";
 import { Brand } from "@/components/ui/Brand";
 import { SubmitButton } from "@/components/ui/SubmitButton";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { CronCountdown } from "./CronCountdown";
 
 const LINKS = [
@@ -54,7 +55,7 @@ export function AppNav({ email, downCount }: Props) {
           <span className="truncate" title={email}>
             {email}
           </span>
-          <div className="mt-2 flex items-center gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 whitespace-nowrap">
             <form action={logoutAction}>
               <SubmitButton size="sm" variant="ghost" pendingLabel="signing out" className="-ml-2">
                 sign out
@@ -63,12 +64,14 @@ export function AppNav({ email, downCount }: Props) {
             <button type="button" className="cursor-pointer text-fg-3 hover:text-fg" onClick={() => window.dispatchEvent(new Event("hb:help"))}>
               [?] keys
             </button>
+            <ThemeToggle />
           </div>
         </div>
       </aside>
 
       <header className="sticky top-0 z-20 flex items-center justify-between gap-2 border-b border-line bg-bg px-4 py-2 md:hidden">
         <Brand href="/dashboard" />
+        <ThemeToggle className="ml-auto" />
         <form action={logoutAction}>
           <SubmitButton size="sm" variant="ghost" pendingLabel="…">
             sign out

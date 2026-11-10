@@ -50,7 +50,7 @@ export default async function MonitorPage({ params, searchParams }: Props) {
         <div className="min-w-0 max-w-full">
           <h1 className="m-0 flex flex-wrap items-center gap-3 text-[24px]/[28px] tracking-[-0.03em] md:text-xl">
             <span className="break-words">{m.name}</span>
-            <StatusTag status={status} />
+            <StatusTag status={status} className="stamp" />
           </h1>
           <a href={m.url} target="_blank" rel="noreferrer" className="mt-1 block text-sm break-all text-fg-2 hover:text-accent-ink">
             {m.url} <span aria-hidden="true">↗</span>

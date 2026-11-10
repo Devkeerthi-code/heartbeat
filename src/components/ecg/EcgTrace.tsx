@@ -8,7 +8,7 @@ type Props = { beats: BeatKind[]; height?: number; className?: string };
 
 function readColors(): string[] {
   const css = getComputedStyle(document.documentElement);
-  return ["--accent-ink", "--slow", "--down", "--text-3"].map((v) => css.getPropertyValue(v).trim());
+  return ["--trace", "--slow", "--down", "--text-3"].map((v) => css.getPropertyValue(v).trim());
 }
 
 /**
@@ -59,12 +59,11 @@ export function EcgTrace({ beats, height = 112, className = "" }: Props) {
     io.observe(canvas);
     const onVisibility = () => (document.hidden ? pause() : play());
     document.addEventListener("visibilitychange", onVisibility);
-    const scheme = window.matchMedia("(prefers-color-scheme: light)");
-    const onScheme = () => {
+    const theme = new MutationObserver(() => {
       trace.colors = readColors();
       trace.resize(reduced);
-    };
-    scheme.addEventListener("change", onScheme);
+    });
+    theme.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     play();
 
     return () => {
@@ -72,7 +71,7 @@ export function EcgTrace({ beats, height = 112, className = "" }: Props) {
       ro.disconnect();
       io.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
-      scheme.removeEventListener("change", onScheme);
+      theme.disconnect();
     };
   }, []);
 

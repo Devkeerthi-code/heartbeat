@@ -10,6 +10,7 @@ const KEYS: Array<[string, string]> = [
   ["enter", "open the selected monitor"],
   ["g m", "go to monitors"],
   ["g a", "go to settings (alerts, status page)"],
+  ["t", "switch paper / dark theme"],
   ["esc", "back / close"],
   ["?", "this help"],
 ];
