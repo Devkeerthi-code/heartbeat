@@ -50,7 +50,7 @@ export function LandingTrace() {
       <div className="vitals crt">
         <div className="flex flex-wrap items-center justify-between gap-3 px-3 pt-2 text-xs text-fg-2">
           <span className="flex items-center gap-2">
-            <span className="demo-badge">ILLUSTRATION</span> your-site.vercel.app
+            <span className="label-badge">ILLUSTRATION</span> your-site.vercel.app
           </span>
           <span aria-hidden="true" className={down ? "glitch" : ""} key={down ? "down" : "up"}>
             <StatusTag status={down ? "down" : "up"} />

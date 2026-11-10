@@ -48,7 +48,7 @@ export default async function StatusPage({ params }: Props) {
   const statuses = monitors.map(publicStatus);
   const active = statuses.filter((s) => s !== "paused").length;
   const down = statuses.filter((s) => s === "down").length;
-  const initials = project.name.replace(/^DEMO\s*·\s*/, "").slice(0, 2).toUpperCase();
+  const initials = project.name.slice(0, 2).toUpperCase();
 
   return (
     <div className="mx-auto max-w-[860px] px-4 pt-5 pb-16 md:px-6 md:pt-8">

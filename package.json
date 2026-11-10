@@ -13,7 +13,6 @@
     "test:watch": "vitest",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
-    "db:seed": "tsx prisma/seed.ts",
     "check:once": "tsx scripts/check-once.ts",
     "rollup:once": "tsx scripts/check-once.ts --rollup",
     "postinstall": "prisma generate"

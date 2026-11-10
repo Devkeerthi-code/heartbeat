@@ -55,9 +55,6 @@ export default async function LandingPage() {
             <Link href={user ? "/monitors/new" : "/signup"} className="btn btn-primary">
               {user ? "+ add a monitor" : "start monitoring, free"}
             </Link>
-            <Link href="/status/demo-coding-club" className="btn">
-              see an example status page <span className="demo-badge">DEMO</span>
-            </Link>
           </div>
           <LandingTrace />
         </div>

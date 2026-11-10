@@ -212,7 +212,7 @@
     animation: glitch 180ms steps(4, end) 1;
   }
 
-  .demo-badge {
+  .label-badge {
     display: inline-block;
     font: 600 10px/14px var(--font-mono);
     letter-spacing: 0.08em;

@@ -2,7 +2,7 @@
 
 Uptime monitoring for student projects, club sites and small business websites: checks every 5 minutes, emails and push-notifies you when a site goes down, and gives you a public status page to share.
 
-**Live demo:** TODO — add the deployed URL here after the first Vercel deploy.
+**Live app:** TODO — add the deployed URL here after the first Vercel deploy.
 
 ## Who is this for and what problem does it solve?
 
@@ -12,22 +12,7 @@ Heartbeat watches those URLs for you. It only alerts on real outages (two failed
 
 ## Screenshots
 
-DEMO data from `npm run db:seed`.
-
-| Dashboard | Monitor detail |
-| --- | --- |
-| ![Dashboard](docs/dashboard-desktop.png) | ![Monitor detail](docs/monitor-desktop.png) |
-| **Public status page** | **Add a monitor** |
-| ![Public status page](docs/status-page-desktop.png) | ![Add a monitor](docs/add-monitor-desktop.png) |
-
-On a phone (360px):
-
-<p>
-  <img src="docs/dashboard-mobile.png" alt="Dashboard on mobile" width="200">
-  <img src="docs/monitor-mobile.png" alt="Monitor detail on mobile" width="200">
-  <img src="docs/status-page-mobile.png" alt="Status page on mobile" width="200">
-  <img src="docs/add-monitor-mobile.png" alt="Add monitor on mobile" width="200">
-</p>
+TODO: sign in to the deployed app with your own account, add your real monitors, let it collect a day of checks, then save screenshots of the dashboard, a monitor page, the public status page and the add-monitor form (desktop and 360px mobile) to `docs/` and link them here.
 
 ## Features
 
@@ -106,7 +91,6 @@ Requirements: Node 20+ and a Postgres database (a free Neon project is easiest).
 npm install
 cp .env.example .env        # fill in DATABASE_URL, DIRECT_URL, CRON_SECRET, SESSION_SECRET (+ Resend/VAPID for alerts)
 npm run db:migrate          # creates tables, indexes and constraints
-npm run db:seed             # optional: DEMO account + 90 days of DEMO history (prints the login)
 npm run dev                 # http://localhost:3000
 ```
 
