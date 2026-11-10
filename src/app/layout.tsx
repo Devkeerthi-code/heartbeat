@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import type { ReactNode } from "react";
 import { PressSprings } from "@/components/motion/PressSprings";
+import { THEME_BOOT_SCRIPT, THEME_COLORS } from "@/components/theme/theme";
+import { ThemeHotkey } from "@/components/theme/ThemeHotkey";
 import { Toaster } from "@/components/toast/Toaster";
 import "./globals.css";
 
@@ -19,15 +21,16 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0c0a" },
-    { media: "(prefers-color-scheme: light)", color: "#f3efe4" },
-  ],
+  colorScheme: "light",
+  themeColor: THEME_COLORS.light,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${mono.variable} ${sans.variable}`}>
+    <html lang="en" className={`${mono.variable} ${sans.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
       <body className="overflow-x-clip">
         <a className="skip-link" href="#main">
           Skip to content
@@ -35,6 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {children}
         <Toaster />
         <PressSprings />
+        <ThemeHotkey />
       </body>
     </html>
   );
