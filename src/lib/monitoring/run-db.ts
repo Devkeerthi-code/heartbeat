@@ -68,3 +68,17 @@ export const dbRunDeps: RunDeps = {
 export function runDueChecks(): Promise<RunSummary> {
   return runCheckBatch(dbRunDeps, DEFAULT_RUN_OPTIONS);
 }
+
+/** "Check now" from the dashboard: claims one monitor (if no cron run holds it) and checks it immediately. */
+export async function runSingleCheck(monitorId: string): Promise<{ ok: boolean; error: string | null; responseMs: number } | null> {
+  const now = new Date();
+  const [claimed] = await db.$queryRaw<ClaimedMonitor[]>`
+    UPDATE "Monitor" SET "claimedUntil" = ${new Date(now.getTime() + CLAIM_TTL_SECONDS * 1000)}
+    WHERE id = ${monitorId} AND ("claimedUntil" IS NULL OR "claimedUntil" < ${now})
+    RETURNING id, url, method::text AS method, "expectedStatus", keyword, "timeoutMs", "intervalMinutes",
+              "checkSsl", status::text AS status, "consecutiveFailures", "lastCheckedAt"`;
+  if (!claimed) return null;
+  const summary = await runCheckBatch({ ...dbRunDeps, claimDue: async () => [claimed] }, { batchSize: 1, concurrency: 1, budgetMs: 30_000 });
+  const latest = await db.monitor.findUnique({ where: { id: monitorId }, select: { lastError: true, lastResponseMs: true } });
+  return { ok: summary.up === 1, error: latest?.lastError ?? null, responseMs: latest?.lastResponseMs ?? 0 };
+}
