@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum MonitorStatus {
+  PENDING
+  UP
+  DOWN
+}
+
+enum HttpMethod {
+  GET
+  HEAD
+  POST
+}
+
+enum AlertKind {
+  DOWN
+  RECOVERED
+  SSL_EXPIRING
+}
+
+enum AlertChannel {
+  EMAIL
+  PUSH
+}
+
+enum AlertState {
+  PENDING
+  SENT
+  FAILED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  emailAlerts  Boolean  @default(true)
+  pushAlerts   Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  sessions          Session[]
+  projects          Project[]
+  pushSubscriptions PushSubscription[]
+}
+
+/// Only a SHA-256 of the session token is stored, so a DB leak can't be replayed as cookies.
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Project {
+  id            String    @id @default(cuid())
+  ownerId       String
+  name          String
+  slug          String    @unique
+  note          String?
+  noteUpdatedAt DateTime?
+  createdAt     DateTime  @default(now())
+
+  owner    User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  monitors Monitor[]
+
+  @@index([ownerId])
+}
+
+model Monitor {
+  id                  String        @id @default(cuid())
+  projectId           String
+  name                String
+  url                 String
+  method              HttpMethod    @default(GET)
+  expectedStatus      Int           @default(200)
+  keyword             String?
+  timeoutMs           Int           @default(10000)
+  intervalMinutes     Int           @default(5)
+  checkSsl            Boolean       @default(true)
+  paused              Boolean       @default(false)
+  status              MonitorStatus @default(PENDING)
+  consecutiveFailures Int           @default(0)
+  lastCheckedAt       DateTime?
+  lastResponseMs      Int?
+  lastError           String?
+  nextCheckAt         DateTime      @default(now())
+  /// Set when a cron run claims the monitor, so overlapping runs never check it twice.
+  claimedUntil        DateTime?
+  sslExpiresAt        DateTime?
+  createdAt           DateTime      @default(now())
+
+  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  checks    Check[]
+  rollups   DailyRollup[]
+  incidents Incident[]
+  alerts    AlertLog[]
+
+  @@index([projectId])
+  @@index([paused, nextCheckAt])
+}
+
+model Check {
+  id         BigInt   @id @default(autoincrement())
+  monitorId  String
+  checkedAt  DateTime @default(now())
+  ok         Boolean
+  statusCode Int?
+  responseMs Int?
+  error      String?
+
+  monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@index([monitorId, checkedAt])
+  @@index([checkedAt])
+}
+
+/// One row per monitor per UTC day; raw checks older than 30 days are folded in here.
+model DailyRollup {
+  monitorId     String
+  day           DateTime @db.Date
+  totalChecks   Int
+  upChecks      Int
+  avgResponseMs Int?
+
+  monitor Monitor @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@id([monitorId, day])
+}
+
+/// A partial unique index in the migration allows at most one open (unresolved) incident per monitor.
+model Incident {
+  id          String    @id @default(cuid())
+  monitorId   String
+  startedAt   DateTime
+  resolvedAt  DateTime?
+  durationSec Int?
+  cause       String
+
+  monitor Monitor    @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  alerts  AlertLog[]
+
+  @@index([monitorId, startedAt])
+}
+
+/// dedupeKey is unique: inserting it is the "lock" that guarantees one alert per incident/channel.
+model AlertLog {
+  id         String       @id @default(cuid())
+  monitorId  String
+  incidentId String?
+  kind       AlertKind
+  channel    AlertChannel
+  dedupeKey  String       @unique
+  state      AlertState   @default(PENDING)
+  error      String?
+  createdAt  DateTime     @default(now())
+
+  monitor  Monitor   @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+  incident Incident? @relation(fields: [incidentId], references: [id], onDelete: SetNull)
+
+  @@index([monitorId, createdAt])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+/// Privacy-respecting usage counter: an event name and an optional user id. No IPs, no user agents.
+model UsageEvent {
+  id        BigInt   @id @default(autoincrement())
+  type      String
+  userId    String?
+  createdAt DateTime @default(now())
+
+  @@index([type, createdAt])
+}
+
+/// Fixed-window rate limiter for auth endpoints, stored in Postgres so it works across serverless instances.
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+}
