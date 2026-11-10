@@ -41,8 +41,7 @@ describe("monitorSchema (server-side validation)", () => {
   });
 
   it("treats a missing checkbox as off", () => {
-    const { checkSsl: _ignored, ...rest } = validMonitor;
-    expect(monitorSchema.parse(rest).checkSsl).toBe(false);
+    expect(monitorSchema.parse({ ...validMonitor, checkSsl: undefined }).checkSsl).toBe(false);
   });
 });
 
