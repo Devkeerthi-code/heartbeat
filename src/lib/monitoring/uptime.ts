@@ -9,9 +9,10 @@ export function startOfUtcDay(d: Date): Date {
 }
 
 /**
- * Uptime % over [from, to). Raw checks count individually. Rollups (one per day) count in
- * proportion to how much of their day falls inside the window, so a window starting mid-day
- * doesn't over-weight that day. Returns null when there is no data at all.
+ * Uptime % over [from, to). Raw checks count individually. A per-day total counts in proportion
+ * to how much of the part of its day that has happened (up to `to`) falls inside the window:
+ * a window starting mid-day only takes a share of that day, while today (still in progress)
+ * counts fully. Returns null when there is no data at all.
  */
 export function uptimePercent(checks: RawCheck[], rollups: Rollup[], from: Date, to: Date): number | null {
   let total = 0;
@@ -24,9 +25,10 @@ export function uptimePercent(checks: RawCheck[], rollups: Rollup[], from: Date,
   }
   for (const r of rollups) {
     const dayStart = startOfUtcDay(r.day).getTime();
-    const overlap = Math.min(dayStart + DAY_MS, to.getTime()) - Math.max(dayStart, from.getTime());
+    const coveredEnd = Math.min(dayStart + DAY_MS, to.getTime());
+    const overlap = coveredEnd - Math.max(dayStart, from.getTime());
     if (overlap <= 0 || r.totalChecks === 0) continue;
-    const share = overlap / DAY_MS;
+    const share = overlap / (coveredEnd - dayStart);
     total += r.totalChecks * share;
     up += r.upChecks * share;
   }

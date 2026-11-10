@@ -33,6 +33,14 @@ describe("uptimePercent", () => {
     expect(uptimePercent([], rollups, from, to)).toBeCloseTo(80, 5);
   });
 
+  it("counts today's in-progress totals fully, not as a fraction of a whole day", () => {
+    const today = [{ day: new Date("2026-11-10T00:00:00Z"), totalChecks: 10, upChecks: 9 }];
+    const yesterday = [{ day: new Date("2026-11-09T00:00:00Z"), totalChecks: 10, upChecks: 10 }];
+    // 06:00 now: today's 10 checks are all inside the window, so this is (9 + 10) / 20.
+    const at6 = new Date("2026-11-10T06:00:00Z");
+    expect(uptimePercent([], [...yesterday, ...today], new Date("2026-11-09T00:00:00Z"), at6)).toBe(95);
+  });
+
   it("combines rollups and raw checks", () => {
     const from = new Date("2026-11-01T00:00:00Z");
     const to = new Date("2026-11-03T00:00:00Z");
