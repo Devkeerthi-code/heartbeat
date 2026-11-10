@@ -40,6 +40,7 @@ On a phone (360px):
 - **Dashboard** — every monitor with status, uptime % for 24 h / 7 d / 30 d, response-time sparkline, recent incidents; monitor page with response-time chart (24 h / 7 d / 30 d), 90-day bars, incident log, pause/resume, check now.
 - **Public status page** per project at `/status/<slug>` — overall status, 90-day uptime bars per monitor, past incidents, optional owner note ("Planned maintenance Saturday 10–11"). URLs and error details are never shown publicly.
 - **Data retention** — raw checks are kept for 30 days; a daily job folds older checks into one row per monitor per day and deletes the raw rows, in one transaction.
+- **Paper (light) theme by default, dark on request** — the look is a printed ECG strip: warm paper, a pink millimetre grid behind the trace and charts, ink-stamp status tags. Press `t` (or the toggle) for the dark terminal theme; the choice is remembered and applied before first paint, so there is no flash.
 - **Usage tracking** — a `UsageEvent` table counts sign-ups, sign-ins, monitors created, status page views and push opt-ins. It stores an event name and optional user id only: no IPs, no user agents, no third-party analytics.
 
 ## Tech stack
